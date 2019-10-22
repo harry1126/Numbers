@@ -13,18 +13,28 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+    String TAG = MainActivity.class.getSimpleName();
     private TextView number;
     int counter;
+    int secret = new Random().nextInt(10)+1;
+    private ImageView result;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(TAG,"secret:"+secret);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        number=findViewById(R.id.num);
+        number =findViewById(R.id.num);
+        result = findViewById(R.id.result_image);
         final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
 
@@ -32,13 +42,24 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counter++;
                 number.setText(String.valueOf(counter));
+                result.setAlpha(1.0f);
+                result.setVisibility(view.VISIBLE);
+
+                if(counter == secret ){
+                    Toast.makeText(MainActivity.this, "you got it !~", Toast.LENGTH_LONG).show();
+                    result.setImageResource(R.drawable.upset);
+                }else {
+                    result.setImageResource(R.drawable.happy);
+                    result.animate().alpha(0.0f).setDuration(1200);
+                }
             }
 
         });
     }
          public void reset(View view) {
-                counter=0;
+                counter = 0;
                 number.setText(String.valueOf(counter));
+                result.setVisibility(view.GONE);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
